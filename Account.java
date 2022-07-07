@@ -1,5 +1,3 @@
-package ATMmachine;
-
 import  java.text.DecimalFormat;
 import java.util.Scanner;
 
