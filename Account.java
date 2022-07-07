@@ -1,133 +1,155 @@
-import  java.text.DecimalFormat;
+import  java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.Map;
 import java.util.Scanner;
 
-public class Account {
+public class OptionMenu extends  Account {
     Scanner sc = new Scanner(System.in);
     DecimalFormat moneyFormat = new DecimalFormat("'$'###,##0.00");
 
-    private  int customerNumber;
-    private int pinNumber;
-    private double checkingBalance = 0;
-    private  double savingBalance = 0;
+    HashMap<Integer, Integer> data = new HashMap<Integer, Integer>();
 
-    /* Set the customer number */
 
-    public void setCustomerNumber(int customerNumber) {
-        this.customerNumber = customerNumber;
+    /* Validate login information customer number and pin number */
+
+    public void getLogin() throws IOException {
+        int x = 3;
+
+        do {
+            try {
+
+                data.put(9876543, 9876);
+                data.put(8989898, 1890);
+
+                System.out.println("Welcome to the ATM Project!");
+
+                System.out.print("Enter Your Customer Number: ");
+                setCustomerNumber(sc.nextInt());
+
+                System.out.print("Enter Your Pin Number: ");
+                setPinNumber(sc.nextInt());
+            } catch (InputMismatchException e) {
+                System.out.println("\n" + "Invalid character(s). Only numbers." + "\n");
+                x = 2;
+            }
+            for (Map.Entry<Integer, Integer> entry : data.entrySet()){
+                if (entry.getKey() == getCustomerNumber() && entry.getValue() == getPinNumber()){
+                    getAccountType();
+                }else{
+                    System.out.println("\n" + "Wrong Customer Number or Pin Number." + "\n");
+                    break;
+                }
+            }
+
+        } while (x == 3);
     }
 
-    /* Get the customer number */
+    /* Display Account Type Menu With Selections */
 
-    public int getCustomerNumber() {
-        return  customerNumber;
-    }
+    public void getAccountType() {
+        System.out.println("Select the Account you want to access: ");
+        System.out.println("Type 1 - Checking Account");
+        System.out.println("Type 2 - Saving Account");
+        System.out.println("Type 3 - Exit");
+        System.out.print("Choice: ");
 
-    /* Set the pin number */
+        selection = sc.nextInt();
 
-    public void setPinNumber(int pinNumber) {
-        this.pinNumber = pinNumber;
-    }
+        switch (selection) {
+            case 1:
+                getChecking();
+                break;
 
-    /* Get the pin number */
+            case 2:
+                getSaving();
+                break;
 
-    public int getPinNumber() {
-        return  pinNumber;
-    }
+            case 3:
+                System.out.println("Thank You for using this ATM, bye.");
+                break;
 
-    /* Get Checking Account Balance */
-
-    public double getCheckingBalance() {
-        return checkingBalance;
-    }
-
-    /* Get Saving Account Balance */
-
-    public double getSavingBalance() {
-        return savingBalance;
-    }
-
-    /* Calculate Checking Account Withdrawal */
-
-    public void calcCheckingWithdraw(double amount) {
-        checkingBalance = (checkingBalance - amount);
-    }
-
-    /* Calculate Saving Account Withdrawal */
-
-    public void calcSavingWithdraw(double amount) {
-        savingBalance = (savingBalance - amount);
-    }
-
-    /* Calculate Checking Account Deposit */
-
-    public void calcCheckingDeposit(double amount) {
-        checkingBalance = (checkingBalance + amount);
-    }
-
-    /* Calculate Saving Account Deposit */
-
-    public void calcSavingDeposit(double amount) {
-        savingBalance = (savingBalance + amount);
-    }
-
-    /* Customer Checking Account Withdraw Input */
-
-    public void getCheckingWithdrawInput() {
-
-        System.out.println("Checking Account Balance: " + moneyFormat.format(checkingBalance));
-        System.out.print("Amount you want to withdraw from Checking Account: ");
-        double amount = sc.nextDouble();
-
-        if ((checkingBalance - amount) >= 0){
-            calcCheckingWithdraw(amount);
-            System.out.println("New Checking Account Balance: " + moneyFormat.format(checkingBalance));
-        } else {
-            System.out.println("Balance cannot be negative." + "\n");
+            default:
+                System.out.println("\n" + "Invalid Choice." + "\n");
+                getAccountType();
         }
     }
 
-    /* Customer Saving Account Withdraw Input */
+    /* Display Checking Account Menu With Selections */
 
-    public void getSavingWithdrawInput() {
-        System.out.println("Saving Account Balance: " + moneyFormat.format(savingBalance));
-        System.out.print("Amount you want to withdraw from Saving Account: ");
-        double amount = sc.nextDouble();
+    public void getChecking() {
+        System.out.println("Checking Account: ");
+        System.out.println("Type 1 - View Balance");
+        System.out.println("Type 2 - Withdraw Funds");
+        System.out.println("Type 3 - Deposit Funds");
+        System.out.println("Type 4 - Exit");
+        System.out.print("Choice: ");
 
-        if ((savingBalance - amount) >= 0){
-            calcSavingWithdraw(amount);
-            System.out.println("New Saving Account Balance: " + moneyFormat.format(savingBalance) + "\n");
-        } else {
-            System.out.println("Balance cannot be negative." + "\n");
+        selection = sc.nextInt();
+
+        switch (selection) {
+            case 1:
+                System.out.println("Checking Account Balance: " + moneyFormat.format(getCheckingBalance()));
+                getAccountType();
+                break;
+
+            case 2:
+                getCheckingWithdrawInput();
+                getAccountType();
+                break;
+
+            case 3:
+                getCheckingDepositInput();
+                getAccountType();
+                break;
+
+            case 4:
+                System.out.println("Thank You for using this ATM, bye.");
+                break;
+
+            default:
+                System.out.println("\n" + "Invalid Choice." + "\n");
+                getChecking();
         }
     }
 
-    /* Customer Checking Account Deposit Input */
+    /* Display Saving Account Menu With Selections */
 
-    public void getCheckingDepositInput() {
-        System.out.println("Checking Account Balance: " + moneyFormat.format(checkingBalance));
-        System.out.print("Amount you want to deposit from Checking Account: ");
-        double amount = sc.nextDouble();
+    public void getSaving() {
+        System.out.println("Saving Account: ");
+        System.out.println("Type 1 - View Balance");
+        System.out.println("Type 2 - Withdraw Funds");
+        System.out.println("Type 3 - Deposit Funds");
+        System.out.println("Type 4 - Exit");
+        System.out.print("Choice: ");
 
-        if ((checkingBalance + amount) >= 0){
-            calcCheckingDeposit(amount);
-            System.out.println("New Checking Account Balance: " + moneyFormat.format(checkingBalance));
-        } else {
-            System.out.println("Balance cannot be negative." + "\n");
+        selection = sc.nextInt();
+
+        switch (selection) {
+            case 1:
+                System.out.println("Saving Account Balance: " + moneyFormat.format(getSavingBalance()));
+                getAccountType();
+                break;
+
+            case 2:
+                getSavingWithdrawInput();
+                getAccountType();
+                break;
+
+            case 3:
+                getSavingDepositInput();
+                getAccountType();
+                break;
+
+            case 4:
+                System.out.println("Thank You for using this ATM, bye.");
+                break;
+
+            default:
+                System.out.println("\n" + "Invalid Choice." + "\n");
+                getChecking();
         }
     }
-
-    /* Customer Saving Account Deposte Input */
-
-    public void getSavingDepositInput() {
-        System.out.println("Saving Account Balance: " + moneyFormat.format(savingBalance));
-        System.out.print("Amount you want to Deposit into your Saving Account: ");
-        double amount = sc.nextDouble();
-
-        if ((savingBalance + amount) >= 0){
-            calcSavingDeposit(amount);
-            System.out.println("New Saving Account Balance: " + moneyFormat.format(savingBalance));
-        } else {
-            System.out.println("Balance cannot be negative." + "\n");
-        }
-    }
+    int selection;
 }
